@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { UploadButton } from "@/lib/uploadthing";
+import AIAssistant from "@/components/AIAssistant";
 
 export default function LessonPage({ params }: { params: Promise<{ subtopicId: string }> }) {
   const { subtopicId } = use(params);
@@ -56,9 +57,18 @@ export default function LessonPage({ params }: { params: Promise<{ subtopicId: s
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Lessons</h1>
-          <button onClick={() => router.back()} className="text-sm text-blue-600 hover:underline">
-            Back
-          </button>
+          <div className="flex gap-3">
+            <AIAssistant
+              onLessonGenerated={(lesson) => {
+                setTitle(lesson.title);
+                setText(lesson.text || "");
+                setContentType(lesson.contentType || "TEXT");
+              }}
+            />
+            <button onClick={() => router.back()} className="text-sm text-blue-600 hover:underline">
+              Back
+            </button>
+          </div>
         </div>
 
         {message && <p className="text-green-600 mb-4 text-sm">{message}</p>}
