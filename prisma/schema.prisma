@@ -49,6 +49,7 @@ model User {
   teacherIEPs     IEP[]            @relation("TeacherIEPs")
   iep             IEP?             @relation(fields: [iEPId], references: [id])
   iEPId           String?
+  parentChilds    ParentChild[]
 }
 
 model Classroom {
@@ -286,4 +287,26 @@ model IEPReview {
   iepId     String
   notes     String?
   createdAt DateTime @default(now())
+}
+
+model Parent {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  children ParentChild[]
+}
+
+model ParentChild {
+  id        String   @id @default(cuid())
+  parent    Parent   @relation(fields: [parentId], references: [id])
+  parentId  String
+  student   User     @relation(fields: [studentId], references: [id])
+  studentId String
+  createdAt DateTime @default(now())
+
+  @@unique([parentId, studentId])
 }
