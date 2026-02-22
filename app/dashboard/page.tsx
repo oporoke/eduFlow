@@ -126,6 +126,12 @@ export default async function DashboardPage() {
                       >
                         Curriculum
                       </Link>
+                      <Link
+                        href={`/teacher/analytics/${c.id}`}
+                        className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                      >
+                        Analytics
+                      </Link>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
