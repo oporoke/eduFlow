@@ -119,6 +119,7 @@ export default function StudentLessonsPage({ params }: { params: Promise<{ subto
                     <video src={lesson.videoUrl} controls className="mt-3 rounded w-full max-h-56" />
                   )
                 )}
+                <CommentSection lessonId={lesson.id} />
               </div>
             ))}
           </div>
