@@ -35,21 +35,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  taughtClasses   Classroom[]      @relation("TeacherClasses")
-  enrolledClasses Enrollment[]
-  lessonProgress  LessonProgress[]
-  quizAttempts    QuizAttempt[]
-  notifications   Notification[]
-  comments        Comment[]
-  reactions       Reaction[]
-  paceVotes       PaceVote[]
-  liveQuestions   LiveQuestion[]
-  studentProfile  StudentProfile?
-  studentIEPs     IEP[]            @relation("StudentIEPs")
-  teacherIEPs     IEP[]            @relation("TeacherIEPs")
-  iep             IEP?             @relation(fields: [iEPId], references: [id])
-  iEPId           String?
-  parentChilds    ParentChild[]
+  taughtClasses        Classroom[]          @relation("TeacherClasses")
+  enrolledClasses      Enrollment[]
+  lessonProgress       LessonProgress[]
+  quizAttempts         QuizAttempt[]
+  notifications        Notification[]
+  comments             Comment[]
+  reactions            Reaction[]
+  paceVotes            PaceVote[]
+  liveQuestions        LiveQuestion[]
+  studentProfile       StudentProfile?
+  studentIEPs          IEP[]                @relation("StudentIEPs")
+  teacherIEPs          IEP[]                @relation("TeacherIEPs")
+  iep                  IEP?                 @relation(fields: [iEPId], references: [id])
+  iEPId                String?
+  parentChilds         ParentChild[]
+  competencyProgresses CompetencyProgress[]
 }
 
 model Classroom {
@@ -124,8 +125,9 @@ model Lesson {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  progress LessonProgress[]
-  comments Comment[]
+  progress           LessonProgress[]
+  comments           Comment[]
+  lessonCompetencies LessonCompetency[]
 }
 
 model LessonProgress {
@@ -149,8 +151,9 @@ model Quiz {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  questions Question[]
-  attempts  QuizAttempt[]
+  questions        Question[]
+  attempts         QuizAttempt[]
+  quizCompetencies QuizCompetency[]
 }
 
 model Question {
@@ -309,4 +312,48 @@ model ParentChild {
   createdAt DateTime @default(now())
 
   @@unique([parentId, studentId])
+}
+
+model Competency {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String
+  createdAt   DateTime @default(now())
+
+  lessonCompetencies LessonCompetency[]
+  quizCompetencies   QuizCompetency[]
+  competencyProgress CompetencyProgress[]
+}
+
+model LessonCompetency {
+  id           String     @id @default(cuid())
+  lesson       Lesson     @relation(fields: [lessonId], references: [id])
+  lessonId     String
+  competency   Competency @relation(fields: [competencyId], references: [id])
+  competencyId String
+
+  @@unique([lessonId, competencyId])
+}
+
+model QuizCompetency {
+  id           String     @id @default(cuid())
+  quiz         Quiz       @relation(fields: [quizId], references: [id])
+  quizId       String
+  competency   Competency @relation(fields: [competencyId], references: [id])
+  competencyId String
+
+  @@unique([quizId, competencyId])
+}
+
+model CompetencyProgress {
+  id           String     @id @default(cuid())
+  student      User       @relation(fields: [studentId], references: [id])
+  studentId    String
+  competency   Competency @relation(fields: [competencyId], references: [id])
+  competencyId String
+  level        String     @default("BEGINNING")
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([studentId, competencyId])
 }

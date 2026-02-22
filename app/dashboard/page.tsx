@@ -138,6 +138,12 @@ export default async function DashboardPage() {
                       >
                         IEPs
                       </Link>
+                      <Link
+                      href={`/teacher/competencies/${c.id}`}
+                      className="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700"
+                    >
+                      Competencies
+                    </Link>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
